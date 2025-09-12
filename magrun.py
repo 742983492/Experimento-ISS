@@ -103,8 +103,8 @@ def initialize_logging(duration):
 
     maglog = open(maglog_path, 'w')
 
-    mag.printlog(f"MagnetometerLog started at {time.strftime('%Y/%m/%d %H:%M:%S', time.gmtime(start))}", maglog)
-    mag.printlog(f"Measurement time: {duration} seconds\n", maglog)
+    print(f"MagnetometerLog started at {time.strftime('%Y/%m/%d %H:%M:%S', time.gmtime(start))}")
+    print(f"Measurement time: {duration} seconds\n")
 
     return maglog, maglog_path, savepath
 
@@ -203,11 +203,11 @@ def measure_and_save(magnetometers, duration, length, folder):
         # Log current memory usage
         process = psutil.Process()
         memory_usage = process.memory_info().rss / 1024 / 1024  # Convert to MB
-        mag.printlog(f"Current memory usage: {memory_usage:.2f} MB")
+        print(f"Current memory usage: {memory_usage:.2f} MB")
 
         # Update the elapsed time
         elapsed_time += segment_duration
-        mag.printlog(f"Remaining time: {duration-elapsed_time} seconds\n")
+        print(f"Remaining time: {duration-elapsed_time} seconds\n")
 
 
 def compress_files_with_script(file_list, rootpath):
@@ -227,9 +227,9 @@ def compress_files_with_script(file_list, rootpath):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        mag.printlog(f"Compression script launched with file list: {txt_path}\n")
+        print(f"Compression script launched with file list: {txt_path}\n")
     except Exception as e:
-        mag.printlog(f"Failed to launch compression script: {e}")
+        print(f"Failed to launch compression script: {e}")
     
 
 def write_filenames_to_txt(file_list, txt_path):
@@ -240,9 +240,9 @@ def write_filenames_to_txt(file_list, txt_path):
         with open(txt_path, 'w') as f:
             for filename in file_list:
                 f.write(filename + '\n')
-        mag.printlog(f"File list written to {txt_path}")
+        print(f"File list written to {txt_path}")
     except Exception as e:
-        mag.printlog(f"Failed to write file list to {txt_path}: {e}")
+        print(f"Failed to write file list to {txt_path}: {e}")
 
 
 def compress_file_keep(file_path, maglog):
@@ -256,9 +256,9 @@ def compress_file_keep(file_path, maglog):
     if maglog!=0:
         try:
             subprocess.run(['xz', '-9vk', file_path], check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            mag.printlog(f"File compressed: {file_path}.xz\n")
+            print(f"File compressed: {file_path}.xz\n")
         except Exception as e:
-            mag.printlog(f"Failed to compress {file_path}: {e}\n")
+            print(f"Failed to compress {file_path}: {e}\n")
     else:
         try:
             subprocess.run(['xz', '-9vk', file_path], check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -278,9 +278,9 @@ def compress_file_delete(file_path, maglog):
     if maglog!=0:
         try:
             subprocess.run(['xz', '-9v', file_path], check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            mag.print(f"File compressed: {file_path}.xz\n", maglog)
+            print(f"File compressed: {file_path}.xz\n")
         except Exception as e:
-            mag.printlog(f"Failed to compress {file_path}: {e}\n", maglog)
+            print(f"Failed to compress {file_path}: {e}\n")
     else:
         try:
             subprocess.run(['xz', '-9v', file_path], check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
