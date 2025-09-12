@@ -1,4 +1,4 @@
-import RM3100 as mag
+import RM3100_NM as mag
 import sys
 import time
 import os
@@ -32,12 +32,9 @@ def main():
         None.
     """
     userbus, duration, length = parse_arguments() # duration = length, userbus = 1
-    maglog, maglog_path, savepath = initialize_logging(duration)
-    magnetometers = launch_magnetometers(userbus, maglog) # borrar maglog
-    measure_and_save(magnetometers, duration, length, savepath, maglog)
-
-    maglog.close()
-    compress_file_keep(maglog_path,0)
+    _, _, savepath = initialize_logging(duration) 
+    magnetometers = launch_magnetometers(userbus)
+    measure_and_save(magnetometers, duration, length, savepath)
 
 
 def parse_arguments():
@@ -113,7 +110,7 @@ def initialize_logging(duration):
     return maglog, maglog_path, savepath
 
 
-def launch_magnetometers(userbus, maglog):
+def launch_magnetometers(userbus):
     """Launch RM3100 magnetometers.
 
     Initializes each magnetometer with predefined settings.
@@ -131,9 +128,9 @@ def launch_magnetometers(userbus, maglog):
     
     frq=0x96    
     cycles=800
-    return [mag.launch(userbus, addr, frq, cycles, maglog) for addr in addresses]
+    return [mag.launch(userbus, addr, frq, cycles) for addr in addresses]
 
-def launch_tempsensors(userbus, maglog):
+def launch_tempsensors(userbus):
     """Launch Temperature sensors.
 
     Initializes each magnetometer with predefined settings. Addresses must be in the same order as the magnetometers
@@ -148,11 +145,11 @@ def launch_tempsensors(userbus, maglog):
     # addresses = [0x20, 0x21, 0x22, 0x23]
     addresses = [0x18, 0x19, 0x1a, 0x1b]
 
-    return [mcp.launch(userbus,addr,maglog) for addr in addresses]
+    return [mcp.launch(userbus,addr) for addr in addresses]
 
 
 
-def measure_and_save(magnetometers, duration, length, folder, maglog):
+def measure_and_save(magnetometers, duration, length, folder):
     """
     Perform continuous segmented measurements with multiple magnetometers and save the results.
 
@@ -186,7 +183,7 @@ def measure_and_save(magnetometers, duration, length, folder, maglog):
         segment_duration = min(length, duration - elapsed_time)
 
         # Perform the measurement and save data to files
-        filepaths = mag.measure_and_save_cont_MAG(magnetometers, segment_duration, maglog, savefolderpath)
+        filepaths = mag.measure_and_save_cont_MAG(magnetometers, segment_duration, savefolderpath)
 
         if len(magnetometers)<2:
             file_list.append(filepaths)
@@ -198,7 +195,7 @@ def measure_and_save(magnetometers, duration, length, folder, maglog):
 
         # Trigger the file compression task for the generated files
         if len(file_list)>16 or segment_duration<length:
-            compress_files_with_script(file_list, folder, maglog)
+            compress_files_with_script(file_list, folder)
             file_list=list()
 
         # Explicit garbage collection to avoid memory leaks
@@ -207,21 +204,21 @@ def measure_and_save(magnetometers, duration, length, folder, maglog):
         # Log current memory usage
         process = psutil.Process()
         memory_usage = process.memory_info().rss / 1024 / 1024  # Convert to MB
-        mag.printlog(f"Current memory usage: {memory_usage:.2f} MB", maglog)
+        mag.printlog(f"Current memory usage: {memory_usage:.2f} MB")
 
         # Update the elapsed time
         elapsed_time += segment_duration
-        mag.printlog(f"Remaining time: {duration-elapsed_time} seconds\n", maglog)
+        mag.printlog(f"Remaining time: {duration-elapsed_time} seconds\n")
 
 
-def compress_files_with_script(file_list, rootpath, maglog):
+def compress_files_with_script(file_list, rootpath):
     """
     Launch a compression script to compress binary files.
     """
     # Generate a timestamped file path
     timestamp = time.strftime("%Y%m%d_%H%M%S", time.gmtime())
     txt_path = rootpath + f"files_to_compress_{timestamp}.txt"
-    write_filenames_to_txt(file_list, txt_path,maglog)
+    write_filenames_to_txt(file_list, txt_path)
 
     try:
         # Call the compression script
@@ -231,12 +228,12 @@ def compress_files_with_script(file_list, rootpath, maglog):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        mag.printlog(f"Compression script launched with file list: {txt_path}\n", maglog)
+        mag.printlog(f"Compression script launched with file list: {txt_path}\n")
     except Exception as e:
-        mag.printlog(f"Failed to launch compression script: {e}", maglog)
+        mag.printlog(f"Failed to launch compression script: {e}")
     
 
-def write_filenames_to_txt(file_list, txt_path, maglog):
+def write_filenames_to_txt(file_list, txt_path):
     """
     Write a list of filenames to a text file.
     """
@@ -244,9 +241,9 @@ def write_filenames_to_txt(file_list, txt_path, maglog):
         with open(txt_path, 'w') as f:
             for filename in file_list:
                 f.write(filename + '\n')
-        mag.printlog(f"File list written to {txt_path}", maglog)
+        mag.printlog(f"File list written to {txt_path}")
     except Exception as e:
-        mag.printlog(f"Failed to write file list to {txt_path}: {e}", maglog)
+        mag.printlog(f"Failed to write file list to {txt_path}: {e}")
 
 
 def compress_file_keep(file_path, maglog):
@@ -260,9 +257,9 @@ def compress_file_keep(file_path, maglog):
     if maglog!=0:
         try:
             subprocess.run(['xz', '-9vk', file_path], check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            mag.printlog(f"File compressed: {file_path}.xz\n", maglog)
+            mag.printlog(f"File compressed: {file_path}.xz\n")
         except Exception as e:
-            mag.printlog(f"Failed to compress {file_path}: {e}\n", maglog)
+            mag.printlog(f"Failed to compress {file_path}: {e}\n")
     else:
         try:
             subprocess.run(['xz', '-9vk', file_path], check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
