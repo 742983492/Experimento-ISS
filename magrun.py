@@ -31,11 +31,10 @@ def main():
     Returns:
         None.
     """
-    userbus, duration, length = parse_arguments()
+    userbus, duration, length = parse_arguments() # duration = length, userbus = 1
     maglog, maglog_path, savepath = initialize_logging(duration)
-    magnetometers = launch_magnetometers(userbus, maglog)
-    temperature = launch_tempsensors(userbus, maglog)
-    measure_and_save(magnetometers, temperature, duration, length, savepath, maglog)
+    magnetometers = launch_magnetometers(userbus, maglog) # borrar maglog
+    measure_and_save(magnetometers, duration, length, savepath, maglog)
 
     maglog.close()
     compress_file_keep(maglog_path,0)
@@ -120,13 +119,13 @@ def launch_magnetometers(userbus, maglog):
     Initializes each magnetometer with predefined settings.
 
     Args:
-        userbus (int): The I2C bus number.
+        userbus (int): The I2C bus number. -> 1
         maglog (file): Log file for capturing initialization logs.
 
     Returns:
         list: A list of RM3100 magnetometer objects.
     """
-    addresses = [0x20, 0x21, 0x22, 0x23]
+    addresses = [0x20]  # por ahora solo dejar 0x20
     # addresses = [0x20, 0x22]
     # addresses = [0x23]
     
@@ -153,7 +152,7 @@ def launch_tempsensors(userbus, maglog):
 
 
 
-def measure_and_save(magnetometers, temperature, duration, length, folder, maglog):
+def measure_and_save(magnetometers, duration, length, folder, maglog):
     """
     Perform continuous segmented measurements with multiple magnetometers and save the results.
 
@@ -187,7 +186,7 @@ def measure_and_save(magnetometers, temperature, duration, length, folder, maglo
         segment_duration = min(length, duration - elapsed_time)
 
         # Perform the measurement and save data to files
-        filepaths = mag.measure_and_save_cont_MAGTEMP(magnetometers, temperature, segment_duration, maglog, savefolderpath)
+        filepaths = mag.measure_and_save_cont_MAG(magnetometers, segment_duration, maglog, savefolderpath)
 
         if len(magnetometers)<2:
             file_list.append(filepaths)

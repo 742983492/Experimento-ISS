@@ -389,7 +389,7 @@ def measure_and_save_cont_MAG(mags, duration, maglog, save_folder):
                     
                     # Write the measurement directly to the CSV file
                     _, writer = writers[i]  # Retrieve writer for the current magnetometer
-                    writer.writerow([timestamp, counters[i], x, y, z])
+                    writer.writerow([timestamp, counters[i], x, y, z]) #printear
 
                     # Log the sample if it matches the print interval
                     if counters[i] % sampleprint == 0:
