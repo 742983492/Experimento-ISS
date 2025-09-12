@@ -251,7 +251,7 @@ def measure_and_save_cont_MAG(mags, duration, save_folder):
     print(f"Measurement starting at {time.strftime('%Y/%m/%d %H:%M:%S', time.gmtime(start))} lasting {duration} seconds")
 
     # Determine the frequency for logging sample points
-    sampleprint = 370
+    sampleprint = 300
     print("DEBUG: sampleprint=", sampleprint)
     print(f"Sample print every {sampleprint} samples\n")
 
