@@ -7,7 +7,6 @@ import gc
 import csv
 import psutil
 import numpy as np
-import MCP9808 as mcp
 
 
 def main():

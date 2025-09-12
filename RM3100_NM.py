@@ -4,7 +4,6 @@ import random
 import numpy as np
 import os
 import csv
-import MCP9808 as mcp
 import re
 
 
