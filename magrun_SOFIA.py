@@ -17,24 +17,24 @@ def main():
 
 
 
-    def parse_arguments():
-        """Parse and validate command-line arguments.
+def parse_arguments():
+    """Parse and validate command-line arguments.
 
-        Inputs:
-            Command-line arguments from `sys.argv`:
-                - `sys.argv[1]`: Bus number (int).
-                - `sys.argv[2]`: Duration of measurement in seconds (int).
-                - `sys.argv[3]` (optional): Length of each measurement file in seconds (int).
+    Inputs:
+        Command-line arguments from `sys.argv`:
+            - `sys.argv[1]`: Bus number (int).
+            - `sys.argv[2]`: Duration of measurement in seconds (int).
+            - `sys.argv[3]` (optional): Length of each measurement file in seconds (int).
 
-        Returns:
-            tuple:
-                - userbus (int): The I2C bus number.
-                - duration (int): Total duration of measurement.
-                - length (int): Duration per measurement file, capped at 3600 seconds.
+    Returns:
+        tuple:
+            - userbus (int): The I2C bus number.
+            - duration (int): Total duration of measurement.
+            - length (int): Duration per measurement file, capped at 3600 seconds.
 
-        Raises:
-            ValueError: If required arguments are missing or invalid.
-        """
+    Raises:
+        ValueError: If required arguments are missing or invalid.
+    """
     if len(sys.argv) < 3:  # Revisa que haya suficientes argumentos
         raise ValueError("Insufficient arguments. Provide bus number and measurement duration.")
 
