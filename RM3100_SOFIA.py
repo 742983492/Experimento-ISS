@@ -200,6 +200,7 @@ def measure_MAG(mags, duration):
 
     print(f"Measurement starting at {time.strftime('%Y/%m/%d %H:%M:%S', time.gmtime(start))} lasting {duration} seconds")
 
+    print("Timestamp\tI2C Address\tSample Count\tX\tY\tZ")
     sampleprint = 300
     pretime = time.time() - start
 
