@@ -61,7 +61,7 @@ def launch_magnetometers(userbus):
     # addresses = [0x20, 0x21, 0x22, 0x23]
     
     frq=0x96   # frecuencia 150 hz limitada por los cycles 
-    cycles=800
+    cycles=200
     return [mag.launch(userbus, addr, frq, cycles) for addr in addresses]  # inicia los magnetometros
 
 
