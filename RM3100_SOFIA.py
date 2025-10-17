@@ -276,7 +276,7 @@ def measure_MAG(mags, duration, save_folder):
 
 
 
-def measure_MAG(mags, duration, save_folder="C:/Users/User HP/Documents/Muestras_ISS"):
+def measure_MAG(mags, duration, save_folder="/home/sofia/SOFIA/data"):
     """
     Perform continuous segmented measurements with multiple magnetometers.
     Saves data directly to CSV files using the standard 'csv' module.
@@ -288,6 +288,12 @@ def measure_MAG(mags, duration, save_folder="C:/Users/User HP/Documents/Muestras
     Returns:
         list: A list of paths to the created measurement files.
     """
+
+    if not os.path.exists(save_folder):
+        print(f"Creating directory: {save_folder}")
+        # os.makedirs crea la ruta completa si falta
+        os.makedirs(save_folder, exist_ok=True)
+    
     start = time.time()
     finish = start + duration
     
