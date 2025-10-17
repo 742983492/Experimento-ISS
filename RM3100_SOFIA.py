@@ -276,7 +276,7 @@ def measure_MAG(mags, duration, save_folder):
 
 
 
-def measure_MAG(mags, duration, save_folder="/home/pi/SOFIA/data"):
+def measure_MAG(mags, duration, save_folder="C:/Users/User HP/Documents/Muestras_ISS"):
     """
     Perform continuous segmented measurements with multiple magnetometers.
     Saves data directly to CSV files using the standard 'csv' module.
