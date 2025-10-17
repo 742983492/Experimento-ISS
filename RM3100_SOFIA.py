@@ -229,9 +229,9 @@ def measure_MAG(mags, duration, save_folder):
     pretime = time.time() - start
 
 
-    '''
+    
     CON PANDAS
-    '''
+    
     file_paths = []
     writers = []
     counters = []
