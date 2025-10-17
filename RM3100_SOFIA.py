@@ -320,8 +320,8 @@ def measure_MAG(mags, duration, save_folder="/home/sofia/SOFIA/data"):
         # Abre el archivo en modo escritura ('w') con newline='' para CSV limpio
         try:
             f = open(file_path, 'w', newline='')
-            writer = csv.writer(f)
             # Escribe la fila de encabezado
+            writer = csv.writer(f, delimiter=';')
             writer.writerow(["Timestamp", "Counter", "X", "Y", "Z"])
             writers.append((f, writer)) # Guarda el objeto archivo y el escritor CSV
             print(f"Initialized CSV for {magaddr}: {file_path}")
