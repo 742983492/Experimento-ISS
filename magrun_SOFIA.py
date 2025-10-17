@@ -88,12 +88,12 @@ def measure(magnetometers, duration):
         segment_duration = duration - elapsed_time
 
         # Perform the measurement and save data to files
-        filepaths = mag.measure_MAG(magnetometers, segment_duration)
+        #filepaths = mag.measure_MAG(magnetometers, segment_duration)
 
-        if len(magnetometers)<2:
-            file_list.append(filepaths)
-        else:
-            file_list.extend(filepaths)
+        #if len(magnetometers)<2:
+        #    file_list.append(filepaths)
+        #else:
+        #    file_list.extend(filepaths)
 
         # Log current memory usage
         process = psutil.Process()
