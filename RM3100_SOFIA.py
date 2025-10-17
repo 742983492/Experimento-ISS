@@ -218,7 +218,7 @@ def measure_MAG(mags, duration, save_folder):
         counters.append(0)  # Initialize counter to start from 0
 
     # Open the file and initialize the CSV writer
-    f = open("C:\Users\User HP\Documents\Muestras_ISS", 'w', newline='')
+    f = open("C:/Users/User HP/Documents/Muestras_ISS", 'w', newline='')
     writer = csv.writer(f)
     writer.writerow(["Timestamp", "Counter", "X", "Y", "Z"])  # Header row
     writers.append((f, writer))  # Store file object and writer together
