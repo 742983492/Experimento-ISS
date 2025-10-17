@@ -1,6 +1,6 @@
 import time
 from smbus import SMBus
-#import pandas as pd
+import pandas as pd
 import csv
 import os
 
@@ -229,7 +229,7 @@ def measure_MAG(mags, duration, save_folder):
 
     '''
     CON PANDAS
-    
+    '''
     file_paths = []
     writers = []
     counters = []
@@ -254,7 +254,7 @@ def measure_MAG(mags, duration, save_folder):
 
     pretime = time.time() - start
     
-    '''
+    
 
     # Main measurement loop
 
