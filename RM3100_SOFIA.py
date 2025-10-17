@@ -1,6 +1,6 @@
 import time
 from smbus import SMBus
-import pandas as pd
+#import pandas as pd
 import csv
 import os
 
