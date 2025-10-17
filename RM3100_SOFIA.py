@@ -1,5 +1,8 @@
 import time
 from smbus import SMBus
+import pandas as pd
+import csv
+import os
 
 class RM3100:
     """Class to interface with the RM3100 magnetometer."""
@@ -193,7 +196,7 @@ def launch(userbus, addr, frq, cycles):
     return mag
 
 
-def measure_MAG(mags, duration):
+def measure_MAG(mags, duration, save_folder):
     start = time.time()
     finish = start + duration
     counters = [0 for _ in mags] 
@@ -202,7 +205,56 @@ def measure_MAG(mags, duration):
 
     print("Timestamp\tI2C Address\tSample Count\tX\tY\tZ")
     sampleprint = 300
+
+    # Prepare file paths, counters, and CSV writers
+    file_paths = []
+    counters = []
+    writers = []
+
+    for mag in mags:
+        magaddr = hex(mag.i2c_address)
+        file_path = os.path.join(save_folder, f"mag_{magaddr}_{time.strftime('%Y%m%d_%H%M%S', time.gmtime(start))}.csv")
+        file_paths.append(file_path)
+        counters.append(0)  # Initialize counter to start from 0
+
+    # Open the file and initialize the CSV writer
+    f = open(file_path, 'w', newline='')
+    writer = csv.writer(f)
+    writer.writerow(["Timestamp", "Counter", "X", "Y", "Z"])  # Header row
+    writers.append((f, writer))  # Store file object and writer together
+    print(f"Initialized CSV for {magaddr}: {file_path}")
+
     pretime = time.time() - start
+
+
+    '''
+    CON PANDAS
+    
+    file_paths = []
+    writers = []
+    counters = []
+
+
+    for mag in mags:
+        magaddr = hex(mag.i2c_address)
+        
+        file_path = os.path.join(save_folder, f"mag_{magaddr}_{time.strftime('%Y%m%d_%H%M%S', time.gmtime(start))}.csv")
+        file_paths.append(file_path)
+        counters.append(0)  
+
+        df = pd.DataFrame(columns=["Timestamp", "Counter", "X", "Y", "Z"])
+
+        writers.append(df)
+
+        # Guardar el DataFrame vacío como CSV (incluyendo el encabezado)
+        df.to_csv(file_path, index=False)
+        
+        print(f"Initialized CSV for {magaddr}: {file_path}")
+
+
+    pretime = time.time() - start
+    
+    '''
 
     # Main measurement loop
 
